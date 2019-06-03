@@ -1,0 +1,70 @@
+<!DOCTYPE html> <!-- 混杂模式BackCompat -->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>14-018-动画-中部固定.html</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			height: 3000px;
+		}
+		#box{
+			position: absolute;
+			right: 0;
+			width: 100px;
+			height: 100px;
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="box"></div>
+</body>
+<script src="../js/util.js"></script>
+<script>
+	function animate(obj,attr,target){
+		clearInterval(obj.timer);
+		var iSpeed = 0;
+		obj.timer = setInterval(function(){
+			var current = parseFloat(getComputedStyle(obj,false)[attr]);
+			if(attr == "opacity"){
+				// attr值的四舍五入
+				current = Math.round(current * 100);
+			}
+			
+			if(current > target){
+				iSpeed = -80;
+			}else{
+				iSpeed = 80;
+			}
+			if(Math.abs(target - current) < Math.abs(iSpeed)){
+				if(attr == "opacity"){
+					obj.style.opacity = target/100;
+				}else{
+					obj.style[attr] = target + 'px';
+				}
+				clearInterval(obj.timer);
+			}else{
+				if(attr == "opacity"){
+					obj.style.opacity = (current + iSpeed)/100;
+				}else{
+					obj.style[attr] = current + iSpeed + 'px';
+				}
+				
+			}
+		},30)
+	}
+
+	var oBox = document.getElementById('box');
+	window.onload = window.onresize =  window.onscroll = function(){
+		var getTop = document.documentElement.scrollTop;
+		var iTarget = (window.innerHeight - oBox.offsetHeight)/2 + getTop;
+		animate(oBox,'top',iTarget);		
+	}
+	
+	
+</script>
+</html>
